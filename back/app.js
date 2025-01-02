@@ -1,21 +1,26 @@
 const express = require('express');
 const cors = require('cors')
-require('dotenv').config
+
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const user = require('./routes/user');
 
 const app = express();
 
-app.use(express.json())
 app.use(cors())
+app.use("/user", user)
 
 const PORT = process.env.PORT || 3000
 
-app.get('/', (req, res) => {
-        res.send('Heerrtyllo')
-})
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+        cors: {
+                origin: "*",
+                method: ["GET", "POST"]
+        }
+ });
 
-app.get('/user', (req, res) => {
-        res.json({status: 200, res: 'hello dayn'})
-})
 
-app.listen(PORT, () => console.log(`http://localhost:3000`))
+httpServer.listen(PORT, () => console.log(`http://localhost:${PORT}`))
 

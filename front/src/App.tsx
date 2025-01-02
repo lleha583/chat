@@ -1,22 +1,23 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { useNavigate } from 'react-router'
 
 function App() {
 
+  const navigate = useNavigate()
+  const [user, setUser] = useState(null)
+
   useEffect(() => {
-    const setUser = async () => {
-      const res = await fetch('http://localhost:3000/user', { method: "GET" })
-      const response = await res.json()
-      await console.log(response);
-    } 
-    setUser()
+    if (user === null) {
+      navigate('/login')
+    }
   }, [])
+
 
   return (
     <>
-    qeertrwqewqrrgrtrrtyvrtwergerrr
+      <h1>app</h1>
     </>
   )
 }
-
 export default App
