@@ -1,26 +1,22 @@
 const express = require('express');
-const cors = require('cors')
-
-const { createServer } = require("http");
-const { Server } = require("socket.io");
+const connectToDb = require('./config/db')
+const cors = require('cors');
+require('dotenv').config()
 
 const user = require('./routes/user');
+const authorisation = require('./routes/Authorisation');
 
 const app = express();
 
+connectToDb()
+
 app.use(cors())
+app.use(express.json())
+
 app.use("/user", user)
+app.use("/auth", authorisation)
 
 const PORT = process.env.PORT || 3000
 
-const httpServer = createServer(app)
-const io = new Server(httpServer, {
-        cors: {
-                origin: "*",
-                method: ["GET", "POST"]
-        }
- });
-
-
-httpServer.listen(PORT, () => console.log(`http://localhost:${PORT}`))
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`))
 

@@ -17,7 +17,7 @@ const Form = () => {
     return (
         <div className="main-form">
             <h2>Form</h2>
-            <form action="">
+            <form>
                 <input 
                     className="form-input"
                     type="text" 
@@ -26,7 +26,10 @@ const Form = () => {
                     onChange={handleChange} 
                     value={form.name} 
                 />
-                <input type="submit" value="submit" />
+                <input 
+                    type="submit" 
+                    value="submit"
+                />
             </form>
         </div>
     )
