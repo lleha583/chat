@@ -1,22 +1,36 @@
 const express = require('express');
-const connectToDb = require('./config/db')
 const cors = require('cors');
 require('dotenv').config()
 
-const user = require('./routes/user');
-const authorisation = require('./routes/Authorisation');
+const { createServer } = require('http')
+const { Server } = require('socket.io')
 
 const app = express();
-
-connectToDb()
 
 app.use(cors())
 app.use(express.json())
 
-app.use("/user", user)
-app.use("/auth", authorisation)
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+    cors: {
+        origin: '*'
+    }
+})
+
+io.on('connection', (socket) => {
+    socket.on('message', (message) => {
+        io.emit(message)
+    })
+    
+    socket.on('disconnect', () => {
+        console.log('disconnected');
+    })
+})
+
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`))
+httpServer.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`)
+})
 
