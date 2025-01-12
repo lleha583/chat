@@ -2,6 +2,27 @@
     width: 80%;
     margin: 50px auto;
     height: 600px;
-    border: 1px solid black;
-    background-color: bisque;
+    background-color: #ebebeb;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #9a9aff;
+    color: white;
+    display: inline;
+    margin: 10px 0;
+}
+
+.user-0 {
+    align-self: flex-end;
+}
+
+.user-1 {
+    align-self: flex-start;
 }

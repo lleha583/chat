@@ -3,38 +3,57 @@ import './App.css'
 import { io } from 'socket.io-client'
 import Chat from './components/chat'
 import ChatNav from './components/ChatNav'
+import Form from './components/Form'
+const socket = io('http://localhost:3000')
 
 function App() {
 
-  const [messages, setMessages] = useState([])
+  const [user, setUser] = useState<string | null>(null)
+  
+  const [input, setInput] = useState('')
+  
+  const sendMessage = () => {
+    socket.emit('message', input)
+    setInput('')
+    
+  }
+  
 
-  const socket = io('http://localhost:3000')
-
-
+  //connect to socket
   useEffect(() => {
+    socket.on('connect', () => socket.emit('message', `${user || socket.id} connected`))
 
-    socket.on('message', (message) => {
-      console.log(message);
-      console.log(messages);
-      setMessages((prev) => { return [...prev, message] })
-    })
-
+    return () => {
+      socket.off('message')
+    }
   }, [])
 
-  setInterval(() => {
-    console.log(messages);
-  }, 3000)
 
-  const sendMessage = (message: string) => {
-    socket.emit('message', message)
-  }
+  //check user
+
+  useEffect(() => {
+    setUser(localStorage.getItem('user'))
+
+  }, [user])
+
+
+
+  if(!user) return (
+    <div>
+      <Form setUser={setUser} />
+    </div>
+  )
+
 
   return (
     <>
-      <h1>app</h1>
+      <h3>chat</h3>
       <div>
-        <Chat messages={messages} />
-        <ChatNav sendMessage={sendMessage} />
+        <Chat socket={socket} />
+        <ChatNav>
+          <input type="text" placeholder="text" value={input} onChange={(e) => {setInput(e.target.value)}} />
+          <button onClick={sendMessage} >send</button>
+        </ChatNav>
       </div>
     </>
   )

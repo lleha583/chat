@@ -1,17 +1,12 @@
 import { useState } from "react"
 
-const Form = () => {
+const Form = ({ setUser }) => {
 
-    const [form, setForm] = useState({
-        name: ''
-    })
+    const [name, setName] = useState('')
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setForm({
-            ...form,
-            [name]: value 
-        })
+    const onSubmit = () => {
+        localStorage.setItem('user', name)
+        setUser(name)
     }   
 
     return (
@@ -23,12 +18,13 @@ const Form = () => {
                     type="text" 
                     name="name"
                     placeholder="Name"
-                    onChange={handleChange} 
-                    value={form.name} 
+                    onChange={(e) => {setName(e.target.value)}} 
+                    value={name} 
                 />
                 <input 
                     type="submit" 
                     value="submit"
+                    onClick={onSubmit}
                 />
             </form>
         </div>
