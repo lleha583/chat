@@ -8,37 +8,23 @@ const socket = io('http://localhost:3000')
 
 function App() {
 
-  const [user, setUser] = useState<string | null>(null)
+  const [user, setUser] = useState<string | null>(localStorage.getItem('user'))
+
   
-  const [input, setInput] = useState('')
-  
-  const sendMessage = () => {
-    socket.emit('message', input)
-    setInput('')
-    
+  const sendMessage = (input: string) => {
+    socket.emit('message', {name: user , message: input})
   }
   
-
   //connect to socket
   useEffect(() => {
-    socket.on('connect', () => socket.emit('message', `${user || socket.id} connected`))
+    socket.on('connect', () => socket.emit('message', `${user} connected`))
 
     return () => {
       socket.off('message')
     }
   }, [])
 
-
-  //check user
-
-  useEffect(() => {
-    setUser(localStorage.getItem('user'))
-
-  }, [user])
-
-
-
-  if(!user) return (
+  if(user === null) return (
     <div>
       <Form setUser={setUser} />
     </div>
@@ -49,13 +35,12 @@ function App() {
     <>
       <h3>chat</h3>
       <div>
-        <Chat socket={socket} />
-        <ChatNav>
-          <input type="text" placeholder="text" value={input} onChange={(e) => {setInput(e.target.value)}} />
-          <button onClick={sendMessage} >send</button>
-        </ChatNav>
+        <Chat socket={socket} user={user} />
+        <ChatNav sendMessage={sendMessage} />
       </div>
     </>
   )
 }
 export default App
+
+

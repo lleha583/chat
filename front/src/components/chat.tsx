@@ -1,23 +1,34 @@
 import { useEffect, useState } from "react"
 
-export default function Chat({ socket }) {
+interface IChat {
+  name: string,
+  message: string,
+  type: string
+}
 
-    const [messages, setMessages] = useState<string[]>([])
+export default function Chat({ socket, user }: any) {
 
-    useEffect(() => {
-        socket.on('message', (message: string) => {
-            console.log(message);
-            setMessages((prev: string[]) => [...prev, message]);
-          });
-    }, [])
+  const [messages, setMessages] = useState<IChat[]>([])
+
+  useEffect(() => {
+    socket.on('message', (message: IChat) => {
+      console.log(message);
+      setMessages((prev: IChat[]) => [...prev, message]);
+    });
+  }, [])
 
   return (
     <div className="chat">
-        {
-            messages.map((item) => {
-                return <p className={`message user-${1}`}>{item}</p>
-            })
-        }
-    </div>
-  )  
+      {
+        messages.map((item) => {
+          return (
+            <>
+              <p className={`message user-${(item.name === user) ? 0 : 1}`}>{item.message}</p>
+              
+            </>
+            )
+        })
+      }
+    </div >
+  )
 };
