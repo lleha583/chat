@@ -1,5 +1,5 @@
 .chat {
-    width: 80%;
+    width: 50%;
     margin: 50px auto;
     height: 600px;
     background-color: #ebebeb;
@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: column;
     justify-content: end;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .message {
@@ -27,4 +27,8 @@
 
 .user-1 {
     align-self: flex-start;
+}
+
+.username {
+    margin: 0 0 0 13px;
 }

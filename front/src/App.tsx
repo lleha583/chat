@@ -20,7 +20,7 @@ function App() {
     socket.on('connect', () => socket.emit('message', `${user} connected`))
 
     return () => {
-      socket.off('message')
+      socket.off('message', () => socket.emit('message', `${user} connected`))
     }
   }, [])
 

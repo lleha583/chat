@@ -8,25 +8,41 @@ interface IChat {
 
 export default function Chat({ socket, user }: any) {
 
-  const [messages, setMessages] = useState<IChat[]>([])
+  const [messages, setMessages] = useState<(string | IChat)[]>([])
+
+  console.log(messages);
 
   useEffect(() => {
-    socket.on('message', (message: IChat) => {
+    socket.on('message', (message: string | IChat) => {
       console.log(message);
-      setMessages((prev: IChat[]) => [...prev, message]);
+      setMessages((prev: (string | IChat)[]) => [...prev, message]);
     });
   }, [])
 
   return (
     <div className="chat">
       {
-        messages.map((item) => {
+        messages.map((item: (string | IChat)) => {
+
           return (
             <>
-              <p className={`message user-${(item.name === user) ? 0 : 1}`}>{item.message}</p>
-              
+              {
+                (item.name !== undefined) ? (
+                  <>
+                    {
+                      (item.name !== user) && <span className="username">{item.name}</span>
+                    }
+                    <p className={`message user-${(item.name === user) ? 0 : 1}`}>{item.message}</p>
+
+                  </>
+                ) : (
+                  <>
+                    <span>{item}</span>
+                  </>
+                )
+              }
             </>
-            )
+          )
         })
       }
     </div >
